@@ -11,6 +11,22 @@ import random
 import sys
 
 
+class DicewareResult:
+    """ DicewareResult contains all the data from the diceware protocol
+        in number + bonus_separator form, so all this object can be used to
+        check up the words database.
+    """
+    def __init__(self, wordsCount=5, systemRand=True, bonusRoll=True):
+        self.wordsCount = wordsCount
+        self.systemRand = systemRand
+        self.bonusRoll = bonusRoll
+
+    def make_rolls(self):
+        self.words = generate_rolls(words=self.wordsCount,
+                                    systemRand=self.systemRand)
+        # TODO : while loop until we get a bonus roll that's correct
+
+
 def roll_5_dice(gen):
     """ roll_5_dice generates a 5-uple of integers between 1 and 6 inclusive
     """
@@ -62,7 +78,7 @@ def print_entropy_help(fileDesc):
           "   - 6 words seems unbreakeable in the forseeable future, but "
           "may be in the grasp of state-backed attacks\n"
           "   - 7 words is unbreakeable with current state of the art\n"
-          "   - 8 words is safe for the times to come", file=fileDesc)
+          "   - 8 words is safe for the times to come\n", file=fileDesc)
 
 
 if __name__ == '__main__':
