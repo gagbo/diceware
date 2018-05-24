@@ -22,17 +22,17 @@ def roll_5_dice(gen):
 
 
 def generate_rolls(words=5, systemRand=True):
-    """ generate_rolls generates an array of 5-uple of [1,6] integers
+    """ generate_rolls generates a words-uple of 5-uple of [1,6] integers
     """
-    result = []
     if systemRand:
         random_machine = random.SystemRandom()
     else:
         random_machine = random.Random()
 
+    result = []
     for i in range(words):
         result.append(roll_5_dice(random_machine))
-    return result
+    return tuple(result)
 
 
 def get_separator(digitThree=0, digitFour=0):
