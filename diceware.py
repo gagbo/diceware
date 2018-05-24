@@ -11,8 +11,8 @@ import random
 import sys
 
 
-def generate_roll_5(gen):
-    """ generate_word generates a 5-uple of integers between 1 and 6 inclusive
+def roll_5_dice(gen):
+    """ roll_5_dice generates a 5-uple of integers between 1 and 6 inclusive
     """
     return (gen.randint(1, 6),
             gen.randint(1, 6),
@@ -31,7 +31,7 @@ def generate_rolls(words=5, systemRand=True):
         random_machine = random.Random()
 
     for i in range(words):
-        result.append(generate_roll_5(random_machine))
+        result.append(roll_5_dice(random_machine))
     return result
 
 
