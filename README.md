@@ -14,9 +14,12 @@ sign up on a site I'll probably visit only once).
 ## Reinventing the wheel
 
 Diceware is simple enough so I can implement it in my own way, so here I am.
+
 There are probably a lot of diceware implementations in the wild ( I'll update
 the README to add a list when I look for ways to implement the actual words
-list in my program), so for the time being I advise you to run the dice or
+list in my program).
+
+I advise you to run the dice or
 trust these other guys, since crypto is not my forte (I know I have to use
 `os.urandom()` and that's pretty much it, this command line tool does not
 protect you from snooping eyes or other infections/memory watchers I do not
