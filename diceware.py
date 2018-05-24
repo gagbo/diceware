@@ -16,6 +16,7 @@ class DicewareResult:
         in number + bonus_separator form, so all this object can be used to
         check up the words database.
     """
+
     def __init__(self, wordsCount=5, systemRand=True, bonusRoll=True):
         self.wordsCount = wordsCount
         self.systemRand = systemRand
@@ -24,7 +25,26 @@ class DicewareResult:
     def make_rolls(self):
         self.words = generate_rolls(words=self.wordsCount,
                                     systemRand=self.systemRand)
-        # TODO : while loop until we get a bonus roll that's correct
+        if self.systemRand:
+            random_machine = random.SystemRandom()
+        else:
+            random_machine = random.Random()
+
+        if self.bonusRoll:
+            self.salt = roll_5_dice(random_machine)
+            while self.salt[0] > self.wordsCount:
+                self.salt = roll_5_dice(random_machine)
+
+    def __str__(self):
+        string = "Diceware Result : {} words with {} generator\n".format(
+            self.wordsCount, "system" if self.systemRand else "pseudo")
+        for i in range(self.wordsCount):
+            string += "Word {} : {}\n".format(i + 1, self.words[i])
+
+        if self.bonusRoll:
+            string += "Salt : {}\n".format(self.salt)
+
+        return string
 
 
 def roll_5_dice(gen):
@@ -51,8 +71,8 @@ def generate_rolls(words=5, systemRand=True):
     return tuple(result)
 
 
-def get_separator(digitThree=0, digitFour=0):
-    """ get_separator returns a char to use typically as separator
+def get_salt_char(digitThree=0, digitFour=0):
+    """ get_salt_char returns a char to use as additional char from salt
     It takes 2 digits in the range [1,6] as parameters digitThree digitFour.
     If these parameters are not given, then space is returned
     """
@@ -84,4 +104,24 @@ def print_entropy_help(fileDesc):
 if __name__ == '__main__':
     random.seed(datetime.datetime.now())
     print_entropy_help(sys.stdout)
-    print(generate_rolls(5))
+
+    print("Default :")
+    test_value = DicewareResult()
+    test_value.make_rolls()
+    print(test_value)
+
+    print("Only 2 words :")
+    test_value_2 = DicewareResult(wordsCount=2)
+    test_value_2.make_rolls()
+    print(test_value_2)
+
+    print("No salt :")
+    test_value_3 = DicewareResult(bonusRoll=False)
+    test_value_3.make_rolls()
+    print(test_value_3)
+
+    print("Pseudo random - No Salt - 3 words :")
+    test_value_4 = DicewareResult(
+        wordsCount=3, systemRand=False, bonusRoll=False)
+    test_value_4.make_rolls()
+    print(test_value_4)
