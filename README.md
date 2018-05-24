@@ -41,7 +41,8 @@ smallest, easiest implementation of the algorithm ; Here are a few scenarios :
 
  - I want to create passphrases using french (or any language) list but without
    accent. I am fine with small mistakes if it means the password is quicker to
-   type on qwerty keyboards
+   type on qwerty keyboards => **Update** : irrelevant as the list is already
+   accent-free
 
  - I want my girlfriend to want to use that (which will bring portability
    issues later probably for anything non-CLI - Windows, iOS, Firefox,
