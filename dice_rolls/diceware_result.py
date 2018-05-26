@@ -22,11 +22,11 @@ class DicewareResult:
         self.bonusRoll = bonusRoll
 
     def make_rolls(self):
-        """ make_rolls fills self.words with dice throws
-        These 'words' which are really 5-uples are the basis for generating
+        """ make_rolls fills self.rolls with dice throws
+        These 'rolls' which are really 5-uples are the basis for generating
         the true passphrase using a dictionary
         """
-        self.words = generate_rolls(words=self.wordsCount,
+        self.rolls = generate_rolls(rolls=self.wordsCount,
                                     systemRand=self.systemRand)
         if self.systemRand:
             random_machine = random.SystemRandom()
@@ -45,7 +45,7 @@ class DicewareResult:
         string = "Diceware Result : {} words with {} generator\n".format(
             self.wordsCount, "system" if self.systemRand else "pseudo")
         for i in range(self.wordsCount):
-            string += "Word {} : {}\n".format(i + 1, self.words[i])
+            string += "Word {} : {}\n".format(i + 1, self.rolls[i])
 
         if self.bonusRoll:
             string += "Salt : {}\n".format(self.salt)
@@ -53,11 +53,11 @@ class DicewareResult:
         return string[:-1]
 
     def key_from_word(self, i):
-        """ Transforms self.words[i] in an integer.
+        """ Transforms self.rolls[i] in an integer.
         It should be used to obtain the key for
         the words dictionary (Diceware list)
         """
-        roll = self.words[i]
+        roll = self.rolls[i]
         result = (roll[0] * 10000 + roll[1] * 1000 +
                   roll[2] * 100 + roll[3] * 10 + roll[4])
         return result
@@ -97,8 +97,8 @@ def roll_5_dice(gen):
             gen.randint(1, 6))
 
 
-def generate_rolls(words=5, systemRand=True):
-    """ generate_rolls generates a words-uple of 5-uple of [1,6] integers
+def generate_rolls(rolls=5, systemRand=True):
+    """ generate_rolls generates a rolls-uple of 5-uple of [1,6] integers
     """
     if systemRand:
         random_machine = random.SystemRandom()
@@ -106,7 +106,7 @@ def generate_rolls(words=5, systemRand=True):
         random_machine = random.Random()
 
     result = []
-    for i in range(words):
+    for i in range(rolls):
         result.append(roll_5_dice(random_machine))
     return tuple(result)
 
