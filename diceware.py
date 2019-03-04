@@ -31,7 +31,7 @@ def create_passphrase(**kwargs):
 
 
 if __name__ == "__main__":
-    print_entropy_help(sys.stdout)
+    print_entropy_help(sys.stderr)
     with open("data/diceware-fr-5-jets.txt", "r") as fr:
         diceware_dict = list_to_dict.create_dictionary(fr)
 
