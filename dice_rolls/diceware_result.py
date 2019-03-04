@@ -40,6 +40,8 @@ class DicewareResult:
             self.salt = roll_5_dice(random_machine)
             while self.salt[0] > self.wordsCount:
                 self.salt = roll_5_dice(random_machine)
+        else:
+            self.salt = None
 
     def __str__(self):
         """ Method called for str(self) and print(self)
@@ -119,7 +121,7 @@ def get_salt_char(digitThree=0, digitFour=0):
     It takes 2 digits in the range [1,6] as parameters digitThree digitFour.
     If these parameters are not given, then space is returned
     """
-    if digitThree == 0 or digitFour == 0:
+    if digitThree < 1 or digitFour < 1 or digitThree > 6 or digitFour > 6:
         return ' '
 
     symbol_table = (('~', '!', '#', '$', '%', '^'),
