@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8
 """ words_list : Utilities to generate a python dictionary from a words list
+    The behaviour is undefined if used with a word list which does not use
+5-throw lists (with results per word being '11111' to '66666' inclusive with
+only digits in 1-6 inclusive)
 """
 
 

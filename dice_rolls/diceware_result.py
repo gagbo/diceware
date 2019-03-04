@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8
-""" diceware_result : Utilities to generate dice rolls for diceware method
+""" diceware_result : Utilities to generate dice rolls for diceware method.
+    The count of rolls per word (currently 5 die per word), is hardcoded in
+a few places and behaviour with non 5-throw lists (from '11111' to '66666'
+with only 1-6 inclusive digits) is undefined.
 """
 import random
 
