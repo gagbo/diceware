@@ -11,16 +11,19 @@ import dice_rolls.diceware_result as dw
 def print_entropy_help(fileDesc):
     """ print_entropy_help prints on fileDesc a remainder on word count
     """
-    print("Each diceware word brings 12.9 bits of entropy. Therefore :\n"
-          "   - 4 words is breakable by ~100 computers.\n"
-          "   - 5 words is breakable only by a corporation with large budget\n"
-          "   - 6 words seems unbreakeable in the forseeable future, but "
-          "may be in the grasp of state-backed attacks\n"
-          "   - 7 words is unbreakeable with current state of the art\n"
-          "   - 8 words is safe for the times to come\n", file=fileDesc)
+    print(
+        "Each diceware word brings 12.9 bits of entropy. Therefore :\n"
+        "   - 4 words is breakable by ~100 computers.\n"
+        "   - 5 words is breakable only by a corporation with large budget\n"
+        "   - 6 words seems unbreakeable in the forseeable future, but "
+        "may be in the grasp of state-backed attacks\n"
+        "   - 7 words is unbreakeable with current state of the art\n"
+        "   - 8 words is safe for the times to come\n",
+        file=fileDesc,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print_entropy_help(sys.stdout)
     with open("data/diceware-fr-5-jets.txt", "r") as fr:
         diceware_dict = list_to_dict.create_dictionary(fr)
