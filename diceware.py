@@ -2,6 +2,7 @@
 # coding: utf-8
 """ diceware : generate passwords with diceware method
 """
+import argparse
 import sys
 
 import dice_dict.list_to_dict as list_to_dict
@@ -32,25 +33,24 @@ def create_passphrase(**kwargs):
 
 if __name__ == "__main__":
     print_entropy_help(sys.stderr)
-    with open("data/diceware-fr-5-jets.txt", "r") as fr:
-        diceware_dict = list_to_dict.create_dictionary(fr)
+    p = argparse.ArgumentParser()
+    p.add_argument("wordlist", default="data/diceware-fr-5-jets.txt")
+    p.add_argument("wordsCount", type=int)
+    p.add_argument("--no-salt", dest="bonusRoll", action="store_false", default=True)
+    p.add_argument(
+        "--no-crypto-rand", dest="systemRand", action="store_false", default=True
+    )
+    args = p.parse_args()
 
-    print("Default :")
-    test_value = create_passphrase()
-    print(test_value)
+    with open(args.wordlist, "r") as file_list:
+        diceware_dict = list_to_dict.create_dictionary(file_list)
+
+    # Remove the wordlist argument from the namespace, so vars(args)
+    # is forwardable to the create_passphrase function, which has
+    # the same interface as the DicewareResult constructor.
+    vars(args).pop("wordlist", None)
+
+    print("Generation parameters : {}".format(args), file=sys.stderr)
+    test_value = create_passphrase(**vars(args))
+    print(test_value, file=sys.stderr)
     print(test_value.password_from_dict(diceware_dict))
-
-    print("\nOnly 2 words :")
-    test_value_2 = create_passphrase(wordsCount=2)
-    print(test_value_2)
-    print(test_value_2.password_from_dict(diceware_dict))
-
-    print("\nNo salt :")
-    test_value_3 = create_passphrase(bonusRoll=False)
-    print(test_value_3)
-    print(test_value_3.password_from_dict(diceware_dict))
-
-    print("\nPseudo random - No Salt - 3 words :")
-    test_value_4 = create_passphrase(wordsCount=3, systemRand=False, bonusRoll=False)
-    print(test_value_4)
-    print(test_value_4.password_from_dict(diceware_dict))
