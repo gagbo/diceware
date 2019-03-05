@@ -53,7 +53,8 @@ def test_non_system_rand():
     stored_results = []
     result = dw.DicewareResult(wordsCount=5, systemRand=False, bonusRoll=True)
 
-    random.seed("Whatever")
+    result.ensure_random_generator()
+    result.random_generator.seed(15)
     state = random.getstate()
 
     result.make_rolls()
@@ -61,7 +62,8 @@ def test_non_system_rand():
     result.make_rolls()
     stored_results.append(copy.deepcopy(result))
 
-    random.setstate(state)
+    #result.random_generator.setstate(state)
+    result.random_generator.seed(15)
     result.make_rolls()
     stored_results.append(copy.deepcopy(result))
     assert stored_results[0].rolls != stored_results[1].rolls

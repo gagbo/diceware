@@ -29,19 +29,35 @@ class DicewareResult:
         These 'rolls' which are really 5-uples are the basis for generating
         the true passphrase using a dictionary
         """
-        self.rolls = generate_rolls(rolls=self.wordsCount,
-                                    systemRand=self.systemRand)
-        if self.systemRand:
-            random_machine = random.SystemRandom()
-        else:
-            random_machine = random.Random()
+        self.rolls = self.generate_rolls()
+        self.ensure_random_generator()
 
         if self.bonusRoll:
-            self.salt = roll_5_dice(random_machine)
+            self.salt = roll_5_dice(self.random_generator)
             while self.salt[0] > self.wordsCount:
-                self.salt = roll_5_dice(random_machine)
+                self.salt = roll_5_dice(self.random_generator)
         else:
             self.salt = None
+
+    def generate_rolls(self):
+        """ generate_rolls generates a rolls-uple of 5-uple of [1,6] integers
+        """
+        self.ensure_random_generator()
+
+        result = []
+        for i in range(self.wordsCount):
+            result.append(roll_5_dice(self.random_generator))
+        return tuple(result)
+
+    def ensure_random_generator(self):
+        """ Create a random generator attribute if not created yet."""
+        if hasattr(self, "random_generator"):
+            return
+
+        if self.systemRand:
+            self.random_generator = random.SystemRandom()
+        else:
+            self.random_generator = random.Random()
 
     def __str__(self):
         """ Method called for str(self) and print(self)
@@ -100,20 +116,6 @@ def roll_5_dice(gen):
             gen.randint(1, 6),
             gen.randint(1, 6),
             gen.randint(1, 6))
-
-
-def generate_rolls(rolls=5, systemRand=True):
-    """ generate_rolls generates a rolls-uple of 5-uple of [1,6] integers
-    """
-    if systemRand:
-        random_machine = random.SystemRandom()
-    else:
-        random_machine = random.Random()
-
-    result = []
-    for i in range(rolls):
-        result.append(roll_5_dice(random_machine))
-    return tuple(result)
 
 
 def get_salt_char(digitThree=0, digitFour=0):
