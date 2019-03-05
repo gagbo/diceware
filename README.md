@@ -4,7 +4,13 @@
 
 For the algorithm, and the words list I am targeting this [paper](http://weber.fi.eu.org/index.shtml.en#projects)
 
-## Why Diceware ?
+## License acks
+
+The bundled `data/diceware-fr-5-jets.txt` word list is a list of french words to
+get with 5 throws. This list has been produced by Christophe-Marie Duquesne under
+[CC-BY-3.0](http://creativecommons.org/licenses/by/3.0) license.
+
+## Why Diceware
 
 Diceware method for generating passwords is really nice and fun (I like
 throwing dice), and I would like to use it to generate passwords on the fly for
@@ -28,30 +34,32 @@ know of)
 ## Usage
 
 The project is not finished yet, but at most times running
+
 ```
 ./diceware.py
 ```
+
 will display stuff (mostly examples and test cases).
 
 That being said, I really want to run the simplest,
 smallest, easiest implementation of the algorithm ; Here are a few scenarios :
 
- - I want to create passphrases in any single language from command line
+- I want to create passphrases in any single language from command line
    (mainly targetting english and french for now)
 
- - I want to create passphrases using french (or any language) list but without
+- I want to create passphrases using french (or any language) list but without
    accent. I am fine with small mistakes if it means the password is quicker to
    type on qwerty keyboards => **Update** : irrelevant as the list is already
    accent-free
 
- - I want my girlfriend to want to use that (which will bring portability
+- I want my girlfriend to want to use that (which will bring portability
    issues later probably for anything non-CLI - Windows, iOS, Firefox,
    Browser integration...)
 
- - I want to be able to control the count of words for the list (When I have to
+- I want to be able to control the count of words for the list (When I have to
    give a dummy account for a one-time login a 3 word list would be fine)
 
- - I want to be able to add salt or not. Salting the passphrase makes it
+- I want to be able to add salt or not. Salting the passphrase makes it
    *a lot* better but it adds constraints on the memorability of
    the passphrase. The better solution from the implementation's point of view
    is to give the choice to the user.
