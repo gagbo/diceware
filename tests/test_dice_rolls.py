@@ -3,7 +3,6 @@
 import copy
 import pytest
 import re
-import random
 
 import dice_rolls.diceware_result as dw
 import dice_dict.list_to_dict as ltd
@@ -17,7 +16,7 @@ def bundled_dict():
 
 
 def test_passphrase_stability(bundled_dict):
-    result = dw.DicewareResult(wordsCount=5, systemRand=True, bonusRoll=True)
+    result = dw.DicewareResult(words_count=5, system_rand=True, bonus_roll=True)
     result.make_rolls()
     passphrases = []
     passphrases.append(result.password_from_dict(bundled_dict))
@@ -29,10 +28,10 @@ def test_passphrase_stability(bundled_dict):
     assert passphrases[1] != passphrases[2]
 
 
-# TODO : make this a lambda to loop over wordsCount ? Or decorator ?
+# TODO : make this a lambda to loop over words_count ? Or decorator ?
 # Or multiple definitions?
 def test_passphrase_wordcount(bundled_dict):
-    result = dw.DicewareResult(wordsCount=5, systemRand=True, bonusRoll=True)
+    result = dw.DicewareResult(words_count=5, system_rand=True, bonus_roll=True)
     result.make_rolls()
     passphrase = result.password_from_dict(bundled_dict)
     m = re.findall(" ", passphrase)
@@ -41,8 +40,8 @@ def test_passphrase_wordcount(bundled_dict):
 
 
 def test_salt():
-    not_salted = dw.DicewareResult(wordsCount=2, systemRand=True, bonusRoll=False)
-    salted = dw.DicewareResult(wordsCount=2, systemRand=True, bonusRoll=True)
+    not_salted = dw.DicewareResult(words_count=2, system_rand=True, bonus_roll=False)
+    salted = dw.DicewareResult(words_count=2, system_rand=True, bonus_roll=True)
     not_salted.make_rolls()
     salted.make_rolls()
     assert salted.salt is not None
@@ -51,7 +50,7 @@ def test_salt():
 
 def test_non_system_rand():
     stored_results = []
-    result = dw.DicewareResult(wordsCount=5, systemRand=False, bonusRoll=True)
+    result = dw.DicewareResult(words_count=5, system_rand=False, bonus_roll=True)
 
     result.ensure_random_generator()
     result.random_generator.seed(15)

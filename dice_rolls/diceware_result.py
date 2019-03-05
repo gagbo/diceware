@@ -14,15 +14,18 @@ class DicewareResult:
         check up the words database.
     """
 
-    def __init__(self, wordsCount=5, systemRand=True, bonusRoll=True):
+    def __init__(self, words_count=5, system_rand=True, bonus_roll=True):
         """ Constructor of a Diceware Result
-        wordsCount is the number of words in the passphrase
-        systemRand asks to use system true random instead of pseudo-random
-        bonusRoll asks for one more roll to salt the passphrase with a symbol
+        words_count is the number of words in the passphrase
+        system_rand asks to use system true random instead of pseudo-random
+        bonus_roll asks for one more roll to salt the passphrase with a symbol
         """
-        self.wordsCount = wordsCount
-        self.systemRand = systemRand
-        self.bonusRoll = bonusRoll
+        self.words_count = words_count
+        self.system_rand = system_rand
+        self.bonus_roll = bonus_roll
+        self.rolls = None
+        self.salt = None
+        self.random_generator = None
 
     def make_rolls(self):
         """ make_rolls fills self.rolls with dice throws
@@ -32,9 +35,9 @@ class DicewareResult:
         self.rolls = self.generate_rolls()
         self.ensure_random_generator()
 
-        if self.bonusRoll:
+        if self.bonus_roll:
             self.salt = roll_5_dice(self.random_generator)
-            while self.salt[0] > self.wordsCount:
+            while self.salt[0] > self.words_count:
                 self.salt = roll_5_dice(self.random_generator)
         else:
             self.salt = None
@@ -45,16 +48,16 @@ class DicewareResult:
         self.ensure_random_generator()
 
         result = []
-        for i in range(self.wordsCount):
+        for _ in range(self.words_count):
             result.append(roll_5_dice(self.random_generator))
         return tuple(result)
 
     def ensure_random_generator(self):
         """ Create a random generator attribute if not created yet."""
-        if hasattr(self, "random_generator"):
+        if hasattr(self, "random_generator") and self.random_generator is not None:
             return
 
-        if self.systemRand:
+        if self.system_rand:
             self.random_generator = random.SystemRandom()
         else:
             self.random_generator = random.Random()
@@ -64,11 +67,12 @@ class DicewareResult:
         Useful for debugging purposes
         """
         string = "Diceware Result : {} words with {} generator\n".format(
-            self.wordsCount, "system" if self.systemRand else "pseudo")
-        for i in range(self.wordsCount):
+            self.words_count, "system" if self.system_rand else "pseudo"
+        )
+        for i in range(self.words_count):
             string += "Word {} : {}\n".format(i + 1, self.rolls[i])
 
-        if self.bonusRoll:
+        if self.bonus_roll:
             string += "Salt : {}\n".format(self.salt)
 
         return string[:-1]
@@ -79,8 +83,9 @@ class DicewareResult:
         the words dictionary (Diceware list)
         """
         roll = self.rolls[i]
-        result = (roll[0] * 10000 + roll[1] * 1000 +
-                  roll[2] * 100 + roll[3] * 10 + roll[4])
+        result = (
+            roll[0] * 10000 + roll[1] * 1000 + roll[2] * 100 + roll[3] * 10 + roll[4]
+        )
         return result
 
     def password_from_dict(self, diceware_dict):
@@ -89,21 +94,21 @@ class DicewareResult:
         diceware_dict must be a dictionary indexed with integers representing
            the rolls concatenated
         """
-        result = ''
+        result = ""
         # Prepare salting the correct word if relevant
-        if self.bonusRoll:
+        if self.bonus_roll:
             target_word_index = self.salt[0] - 1
 
-        for i in range(self.wordsCount):
+        for i in range(self.words_count):
             new_word = list(diceware_dict[self.key_from_word(i)])
             # Salting
-            if self.bonusRoll and i == target_word_index:
+            if self.bonus_roll and i == target_word_index:
                 target_char = min(self.salt[1], len(new_word))
                 replace_char = get_salt_char(self.salt[2], self.salt[3])
                 new_word[target_char - 1] = replace_char
 
             result += "".join(new_word)
-            result += ' '
+            result += " "
         result = result[:-1]
         return result
 
@@ -111,26 +116,30 @@ class DicewareResult:
 def roll_5_dice(gen):
     """ roll_5_dice generates a 5-uple of integers between 1 and 6 inclusive
     """
-    return (gen.randint(1, 6),
-            gen.randint(1, 6),
-            gen.randint(1, 6),
-            gen.randint(1, 6),
-            gen.randint(1, 6))
+    return (
+        gen.randint(1, 6),
+        gen.randint(1, 6),
+        gen.randint(1, 6),
+        gen.randint(1, 6),
+        gen.randint(1, 6),
+    )
 
 
-def get_salt_char(digitThree=0, digitFour=0):
+def get_salt_char(digit_three=0, digit_four=0):
     """ get_salt_char returns a char to use as additional char from salt
     It takes 2 digits in the range [1,6] as parameters digitThree digitFour.
     If these parameters are not given, then space is returned
     """
-    if digitThree < 1 or digitFour < 1 or digitThree > 6 or digitFour > 6:
-        return ' '
+    if digit_three < 1 or digit_four < 1 or digit_three > 6 or digit_four > 6:
+        return " "
 
-    symbol_table = (('~', '!', '#', '$', '%', '^'),
-                    ('&', '*', '(', ')', '-', '='),
-                    ('+', '[', ']', '\\', '{', '}'),
-                    (':', ';', '"', '\'', '<', '>'),
-                    ('?', '/', '0', '1', '2', '3'),
-                    ('4', '5', '6', '7', '8', '9'))
+    symbol_table = (
+        ("~", "!", "#", "$", "%", "^"),
+        ("&", "*", "(", ")", "-", "="),
+        ("+", "[", "]", "\\", "{", "}"),
+        (":", ";", '"', "'", "<", ">"),
+        ("?", "/", "0", "1", "2", "3"),
+        ("4", "5", "6", "7", "8", "9"),
+    )
 
-    return symbol_table[digitFour - 1][digitThree - 1]
+    return symbol_table[digit_four - 1][digit_three - 1]
