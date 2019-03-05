@@ -55,14 +55,12 @@ def test_non_system_rand():
 
     result.ensure_random_generator()
     result.random_generator.seed(15)
-    state = random.getstate()
 
     result.make_rolls()
     stored_results.append(copy.deepcopy(result))
     result.make_rolls()
     stored_results.append(copy.deepcopy(result))
 
-    #result.random_generator.setstate(state)
     result.random_generator.seed(15)
     result.make_rolls()
     stored_results.append(copy.deepcopy(result))
